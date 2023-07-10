@@ -43,7 +43,7 @@ lin = ['-', ':', '--', '-', '--', ':']
 mark = ['*', 'o', 'd', 's', '^']
 scintillators = ['bcf10', 'bcf60', 'ej204', 'bcf60-Lee', 'Medscint']
 scint_label = ['BCF-10', 'BCF-60', 'EJ-204', 'BCF-60 Lee filter', 'Medscint']
-path = '/Users/yun/Library/CloudStorage/OneDrive-Medscintinc/SpectraOutput/'
+path = '/Users/yunuen/Library/CloudStorage/OneDrive-Medscintinc/SpectraOutput'
 folder = os.path.expanduser(path)
 files = os.listdir(path)
 channel = [0, 1, 1, 0, 1]
@@ -296,12 +296,12 @@ for s in range(len(scintillators)):
         # print(field_size[f], scintillators[s], tobeanalyse)
 
         for item in tobeanalyse:
-            # print(scintillators[s], field_size[f],  item)    # per bfield
+            print(scintillators[s], field_size[f],  item)    # per bfield
             for file in item:
                 filepath = path + file
-                # print(file)
+                print(file)
                 Resultat.append(summed_spectra_old(filepath, channel[s]))
-    # print(scintillators[s], field_size[f])
+    print(scintillators[s], field_size[f])
 
 n = 10 * 3 + 2 * 6
 

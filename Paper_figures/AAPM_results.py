@@ -32,103 +32,23 @@ Mean_weight = data['Mean_weight']
 std_weight = data['std_weight']
 Weights = data['Weights']
 
-data_mc = np.load('dose_mc.npz')
+data_mc = np.load(path + 'Experimental_analysis/dose_mc.npz')
 bfields_mc = [-1.5, -1, -0.5, -0.35, -0.2, 0, 0.2, 0.35, 0.5, 1, 1.5]
 dose_mc = data_mc['dose_mc']
 print(bfields_mc)
 j = bfields_mc.index(0)
-'''
-# Grant figure
-plt.rcParams.update({'font.size': 12})
-# Absolute spectra
-fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(12, 6), sharey=True)
-plt.subplot(132)
-plt.plot(Mean_spectrum[0][0], label=str(bfields[0]) + ' T')
-plt.plot(Mean_spectrum[0][5],  ls='--',label=str(bfields[5]) + ' T' + ', e- \u2192 tip')
-plt.plot(Mean_spectrum[0][10], label=str(bfields[5]) + ' T' + ', e- \u2192 stem')
-
-plt.xlabel('Wavelength (a.u.)')
-plt.ylim([0, 75000])
-plt.title(scint_label[0])
-plt.legend()
-plt.subplot(133)
-
-plt.plot(Mean_spectrum[1][0], label=str(bfields[0]) + ' T')
-plt.plot(Mean_spectrum[1][5],  ls='--',label=str(bfields[5]) + ' T' + ', e- \u2192 tip')
-plt.plot(Mean_spectrum[1][10], label=str(bfields[5]) + ' T' + ', e- \u2192 stem')
-plt.xlabel('Wavelength (a.u.)')
-
-plt.ylim([0, 75000])
-plt.title(scint_label[1])
-plt.legend()
-plt.subplot(131)
-
-plt.plot(Mean_spectrum[2][0], label=str(bfields[0]) + ' T')
-plt.plot(Mean_spectrum[2][5],  ls='--', label=str(bfields[5]) + ' T' + ', e- \u2192 tip')
-plt.plot(Mean_spectrum[2][10],  label=str(bfields[5]) + ' T' + ', e- \u2192 stem')
-plt.xlabel('Wavelength (a.u.)')
-plt.ylabel('Intensity (a.u.)' )
-plt.ylim([0, 75000])
-plt.title(scint_label[2])
-plt.legend()
-plt.tight_layout()
-plt.savefig("spectrum.eps")
-plt.show()
 
 
 
-# Scintillation
-fig = plt.figure(figsize=(14, 7))
-#plt.rcParams.update({'font.size': 1})
-for s in range(len(scintillators) -2 ):
-    plt.rcParams.update({'font.size': 22})
-    plt.errorbar(bfields, Mean_dose[s][6:12] / Mean_dose[s][6],
-                 yerr=np.sqrt((std_dose[s][6:12] / Mean_dose[s][6:12]) ** 2 + (std_dose[s][6] / Mean_dose[s][6]) ** 2) *
-                      (Mean_dose[s][6:12] / Mean_dose[s][6]), color=colors[s], fmt=symbol[s], linestyle='-',
-                 label=scint_label[s] + ', e- \u2192 stem')
-    plt.errorbar(bfields, Mean_dose[s][0:6] / Mean_dose[s][0],
-                 yerr=np.sqrt((std_dose[s][0:6] / Mean_dose[s][0:6]) ** 2 + (std_dose[s][0] / Mean_dose[s][0]) ** 2) * (
-                      Mean_dose[s][0:6] / Mean_dose[s][0]), markerfacecolor='none', color=colors[s], fmt=symbol[s], linestyle=':',
-                 label=scint_label[s] + ', e- \u2192 tip')
-    plt.ylabel('Scintillation abundance / \n scintillation abundance [0 T]')
-    plt.xlabel('Magnetic field [T]')
- # Monte Carlo
-plt.errorbar(np.abs(bfields_mc[:j + 1]), dose_mc[1, :j + 1, 0] / dose_mc[1, j, 0],
-                 yerr=np.sqrt(dose_mc[1, :j + 1, 2] ** 2 + dose_mc[1, j, 2] ** 2), fmt='-^', color='black',
-                 label='Monte Carlo dose' + ' e- \u2192 stem')
-plt.errorbar(np.abs(bfields_mc[j:]), dose_mc[1, j:, 0] / dose_mc[1, j, 0],
-                 yerr=np.sqrt(dose_mc[1, j:, 2] ** 2 + dose_mc[1, j, 2] ** 2), fmt=':^', color='black',
-                 label='Monte Carlo dose' + ' e- \u2192 tip')
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.tight_layout()
-#plt.savefig("all_7x7_scint_abundance.eps")
-plt.savefig("scint_grant.eps")
-plt.show()
+# ----------------------------------
+# Figure with all scintillator
+# ----------------------------------
+# Figures with  MC
 
-fig = plt.figure(figsize=(14, 7))
-#plt.rcParams.update({'font.size': 10})
-for s in range(len(scintillators) -2 ):
-    plt.errorbar(bfields, Mean_ckov[s][6:12] / Mean_ckov[s][6],
-             yerr=np.sqrt((std_ckov[s][6:12] / Mean_ckov[s][6:12]) ** 2 + (std_ckov[s][6] / Mean_ckov[s][6]) ** 2) *
-                  (Mean_ckov[s][6:12] / Mean_ckov[s][6]), color=colors[s], fmt=symbol[s], linestyle='-',
-             label=scint_label[s] + ', e- \u2192 stem')
-    plt.errorbar(bfields, Mean_ckov[s][0:6] / Mean_ckov[s][0],
-             yerr=np.sqrt((std_ckov[s][0:6] / Mean_ckov[s][0:6]) ** 2 + (std_ckov[s][0] / Mean_ckov[s][0]) ** 2) * (
-                     Mean_ckov[s][0:6] / Mean_ckov[s][0]), markerfacecolor='none', color=colors[s], fmt=symbol[s],
-             linestyle='--',
-             label=scint_label[s] + ', e- \u2192 tip')
-plt.ylabel('Cerenkov abundance / \n Cerenkov abundance [0 T]')
-plt.xlabel('Magnetic field [T]')
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.tight_layout()
-#plt.savefig("all_7x7_scint_abundance.eps")
-plt.savefig("ckov_grant.eps")
-plt.show()
-'''
 # Scintillation
 plt.rcParams.update({'font.size': 12})
 fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(9, 7), gridspec_kw={'height_ratios': [2, 1]}, sharex=True)
-for s in range(len(scintillators) -2 ):
+for s in [0, 4]:
     plt.subplot(211)
     plt.errorbar(bfields, Mean_dose[s][6:12] / Mean_dose[s][6],
                  yerr=np.sqrt((std_dose[s][6:12] / Mean_dose[s][6:12]) ** 2 + (std_dose[s][6] / Mean_dose[s][6]) ** 2) *
@@ -138,18 +58,13 @@ for s in range(len(scintillators) -2 ):
                  yerr=np.sqrt((std_dose[s][0:6] / Mean_dose[s][0:6]) ** 2 + (std_dose[s][0] / Mean_dose[s][0]) ** 2) * (
                       Mean_dose[s][0:6] / Mean_dose[s][0]), markerfacecolor='none', color=colors[s], fmt=symbol[s], linestyle=':',
                  label=scint_label[s] + ', e- \u2192 tip')
-
     plt.ylabel('Scintillation abundance /\n scintillation abundance [0 T]')
-
-
     plt.subplot(212)
     plt.plot(bfields, 100*((Mean_dose[s][6:12] / Mean_dose[s][6]) - (Mean_dose[s][0:6] / Mean_dose[s][0])) /
              (Mean_dose[s][0:6] / Mean_dose[s][0]), color=colors[s], marker=symbol[s], label=scint_label[s])
     plt.ylabel('Relative difference \n in orientation [%]')
     plt.xlabel('Magnetic field [T]')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
- # Monte Carlo
 
 plt.subplot(211)
 plt.errorbar(np.abs(bfields_mc[:j + 1]), dose_mc[1, :j + 1, 0] / dose_mc[1, j, 0],
@@ -158,17 +73,15 @@ plt.errorbar(np.abs(bfields_mc[:j + 1]), dose_mc[1, :j + 1, 0] / dose_mc[1, j, 0
 plt.errorbar(np.abs(bfields_mc[j:]), dose_mc[1, j:, 0] / dose_mc[1, j, 0],
                  yerr=np.sqrt(dose_mc[1, j:, 2] ** 2 + dose_mc[1, j, 2] ** 2), fmt=':^', color='black',
                  label='Monte Carlo dose' + ' e- \u2192 tip')
+
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-
 plt.tight_layout()
-#plt.savefig("all_7x7_scint_abundance.eps")
-plt.savefig("scint_elekta.eps")
+plt.savefig("scint_7x7.eps")
 plt.show()
 
 #Cerenkov
 fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(9, 7), gridspec_kw={'height_ratios': [2, 1]}, sharex=True)
-for s in range(len(scintillators)-2):
+for s in [0, 4]:
     plt.subplot(211)
     plt.errorbar(bfields, Mean_ckov[s][6:12] / Mean_ckov[s][6],
                  yerr=np.sqrt((std_ckov[s][6:12] / Mean_ckov[s][6:12]) ** 2 + (std_ckov[s][6] / Mean_ckov[s][6]) ** 2) *
@@ -185,11 +98,38 @@ for s in range(len(scintillators)-2):
     plt.ylabel('Relative difference \n in orientation [%]')
     plt.xlabel('Magnetic field [T]')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-
 plt.tight_layout()
-#plt.savefig("all_7x7_ckov_abundance.eps")
-plt.savefig("ckov_elekta.eps")
+plt.savefig("ckov_7x7.eps")
 plt.show()
 
+# ------------------------------------
+# Effect of the base core material
+# Comparison between EJ-204  and BCF-10
+# ------------------------------------
+# Absolute spectra
+plt.rcParams.update({'font.size': 12})
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 6), sharey=True)
 
+
+
+plt.subplot(132)
+plt.plot(Mean_spectrum[0][0], label=str(bfields[0]) + ' T')
+plt.plot(Mean_spectrum[0][5],  ls='--',label=str(bfields[5]) + ' T' + ', e- \u2192 tip')
+plt.plot(Mean_spectrum[0][10], label=str(bfields[5]) + ' T' + ', e- \u2192 stem')
+plt.xlabel('Wavelength (a.u.)')
+plt.ylim([0, 75000])
+plt.title(scint_label[0])
+plt.legend()
+
+plt.subplot(133)
+plt.plot(Mean_spectrum[4][0], label=str(bfields[0]) + ' T')
+plt.plot(Mean_spectrum[4][5],  ls='--',label=str(bfields[5]) + ' T' + ', e- \u2192 tip')
+plt.plot(Mean_spectrum[4][10], label=str(bfields[5]) + ' T' + ', e- \u2192 stem')
+plt.xlabel('Wavelength (a.u.)')
+plt.ylim([0, 75000])
+plt.title(scint_label[4])
+plt.legend()
+
+plt.tight_layout()
+plt.savefig('abs_spectrum_basecore.eps')
+plt.show()
